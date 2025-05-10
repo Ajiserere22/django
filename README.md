@@ -1,66 +1,41 @@
-# Django
+# Backend API
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-django-template%26template_owner%3DDefangSamples)
+This is a Node.js/Express backend API with MongoDB and JWT authentication.
 
-This sample is a simple Django to-do app that uses SQLite as the database, which will be reset every time you deploy. **It is not production-ready**. For production use cases, you should check out the Django + Postgres sample.
+## Setup
 
-The app includes a management command which is run on startup to create a superuser with the username `admin` and password `admin`. This means you can login to the admin interface at `/admin/` and see the Django admin interface without any additional steps. The `example_app` is already registered and the `Todo` model is already set up to be managed in the admin interface.
+1. Clone the repository or copy the backend folder.
 
-The Dockerfile and compose files are already set up for you and are ready to be deployed. Serving is done using [Gunicorn](https://gunicorn.org/) and uses [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) for static files. The `CSRF_TRUSTED_ORIGINS` setting is configured to allow the app to run on a `defang.dev` subdomain.
-
-## Prerequisites
-
-1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
-3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
-
-## Development
-
-To run the application locally, you can use the following command:
+2. Install dependencies:
 
 ```bash
-docker compose up --build
+cd backend
+npm install
 ```
 
-## Configuration
+3. Create a `.env` file in the `backend` directory based on `.env.example` and update the values:
 
-For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration). 
+```
+MONGODB_URI=mongodb://localhost:27017/yourdbname
+JWT_SECRET=your_jwt_secret_key
+PORT=5000
+```
 
-If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+4. Start the server:
 
 ```bash
-defang config set API_KEY
+npm run dev
 ```
 
-## Deployment
+The server will start on the port specified in `.env` (default 5000).
 
-> [!NOTE]
-> Download [Defang CLI](https://github.com/DefangLabs/defang)
+## API Endpoints
 
-### Defang Playground
+- `GET /` - Basic health check route.
+- `POST /api/auth/register` - Register a new user. Requires `username`, `email`, and `password` in the request body.
+- `POST /api/auth/login` - Login a user. Requires `email` and `password` in the request body. Returns a JWT token on success.
 
-Deploy your application to the Defang Playground by opening up your terminal and typing:
-```bash
-defang compose up
-```
+## Notes
 
-### BYOC (AWS)
-
-If you want to deploy to your own cloud account, you can use Defang BYOC:
-
-1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
-2. Make sure to update the `CSRF_TRUSTED_ORIGINS` setting in the `settings.py` file to include an appropriate domain.
-3. Run in a terminal that has access to your AWS environment variables:
-    ```bash
-    defang --provider=aws compose up
-    ```
-
----
-
-Title: Django
-
-Short Description: A simple Django app that uses SQLite as the database.
-
-Tags: Django, SQLite, Python
-
-Languages: python
+- Make sure MongoDB is running locally or update the `MONGODB_URI` to point to your MongoDB instance.
+- Use the JWT token returned from login to authenticate protected routes (to be implemented as needed).
